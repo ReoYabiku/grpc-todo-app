@@ -4,6 +4,11 @@ package todo;
 
 option go_package = "./pb";
 
+service TodoService {
+  rpc CreateTodo (CreateTodoRequest) returns (CreateTodoResponse);
+  rpc GetTodo (GetTodoRequest) returns (GetTodoResponse);
+};
+
 message CreateTodoRequest {
   int32 id = 1;
   string content = 2;
@@ -14,6 +19,12 @@ message CreateTodoResponse {
   int32 id = 1;
 };
 
-service TodoService {
-  rpc CreateTodo (CreateTodoRequest) returns (CreateTodoResponse);
+message GetTodoRequest {
+  int32 id = 1;
+};
+
+message GetTodoResponse {
+  int32 id = 1;
+  string content = 2;
+  bool isDone = 3;
 };

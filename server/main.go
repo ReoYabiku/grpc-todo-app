@@ -34,12 +34,37 @@ func (*server) CreateTodo(ctx context.Context, req *pb.CreateTodoRequest) (*pb.C
 	defer file.Close()
 
 	encoder := gob.NewEncoder(file)
-	// gobのEncodeにポインタを渡してもいいの？
 	if err = encoder.Encode(req); err != nil {
 		return nil, err
 	}
 
 	return &pb.CreateTodoResponse{Id: req.Id}, nil
+}
+
+func (*server) GetTodo(ctx context.Context, req *pb.GetTodoRequest) (*pb.GetTodoResponse, error) {
+    fmt.Println("GetTodo was invoked")
+
+    currentDir, err := os.Getwd()
+    if err != nil {
+        return nil, err
+    }
+    fileName := fmt.Sprintf("%d.gob", req.GetId())
+
+    path := filepath.Join(currentDir, "storage", fileName)
+    file, err := os.Open(path)
+    if err != nil {
+        return nil, err
+    }
+    defer file.Close()
+
+    res := &pb.GetTodoResponse{}
+
+    decoder := gob.NewDecoder(file)
+    if err = decoder.Decode(res); err != nil {
+        return nil, err
+    }
+
+    return res, nil
 }
 
 func main() {

@@ -18,13 +18,14 @@ func main() {
 
     client := pb.NewTodoServiceClient(conn)
     callCreateTodo(client)
+    callGetTodo(client)
 }
 
 func callCreateTodo(client pb.TodoServiceClient) {
     in := &pb.CreateTodoRequest{
         Id: 1,
         Content: "implement Javascript for gRPC",
-        IsDone: false,
+        IsDone: true,
     }
     res, err := client.CreateTodo(context.Background(), in)
     if err != nil {
@@ -32,4 +33,17 @@ func callCreateTodo(client pb.TodoServiceClient) {
     }
 
     fmt.Println(res.GetId())
+}
+
+func callGetTodo(client pb.TodoServiceClient) {
+    in := &pb.GetTodoRequest{
+        Id: 1,
+    }
+    res, err := client.GetTodo(context.Background(), in)
+    if err != nil {
+        log.Fatalf("failed to get todo: %v", err)
+    }
+
+    fmt.Println(res)
+    fmt.Printf("isDone: %v", res.GetIsDone())
 }
