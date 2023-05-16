@@ -196,5 +196,127 @@ proto.todo.TodoServicePromiseClient.prototype.getTodo =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.todo.GetAllTodosRequest,
+ *   !proto.todo.GetAllTodosResponse>}
+ */
+const methodDescriptor_TodoService_GetAllTodos = new grpc.web.MethodDescriptor(
+  '/todo.TodoService/GetAllTodos',
+  grpc.web.MethodType.UNARY,
+  proto.todo.GetAllTodosRequest,
+  proto.todo.GetAllTodosResponse,
+  /**
+   * @param {!proto.todo.GetAllTodosRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.todo.GetAllTodosResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.todo.GetAllTodosRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.todo.GetAllTodosResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.todo.GetAllTodosResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.todo.TodoServiceClient.prototype.getAllTodos =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/todo.TodoService/GetAllTodos',
+      request,
+      metadata || {},
+      methodDescriptor_TodoService_GetAllTodos,
+      callback);
+};
+
+
+/**
+ * @param {!proto.todo.GetAllTodosRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.todo.GetAllTodosResponse>}
+ *     Promise that resolves to the response
+ */
+proto.todo.TodoServicePromiseClient.prototype.getAllTodos =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/todo.TodoService/GetAllTodos',
+      request,
+      metadata || {},
+      methodDescriptor_TodoService_GetAllTodos);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.todo.UpdateTodoRequest,
+ *   !proto.todo.UpdateTodoResponse>}
+ */
+const methodDescriptor_TodoService_UpdateTodo = new grpc.web.MethodDescriptor(
+  '/todo.TodoService/UpdateTodo',
+  grpc.web.MethodType.UNARY,
+  proto.todo.UpdateTodoRequest,
+  proto.todo.UpdateTodoResponse,
+  /**
+   * @param {!proto.todo.UpdateTodoRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.todo.UpdateTodoResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.todo.UpdateTodoRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.todo.UpdateTodoResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.todo.UpdateTodoResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.todo.TodoServiceClient.prototype.updateTodo =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/todo.TodoService/UpdateTodo',
+      request,
+      metadata || {},
+      methodDescriptor_TodoService_UpdateTodo,
+      callback);
+};
+
+
+/**
+ * @param {!proto.todo.UpdateTodoRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.todo.UpdateTodoResponse>}
+ *     Promise that resolves to the response
+ */
+proto.todo.TodoServicePromiseClient.prototype.updateTodo =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/todo.TodoService/UpdateTodo',
+      request,
+      metadata || {},
+      methodDescriptor_TodoService_UpdateTodo);
+};
+
+
 module.exports = proto.todo;
 

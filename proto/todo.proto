@@ -7,6 +7,8 @@ option go_package = "./pb";
 service TodoService {
   rpc CreateTodo (CreateTodoRequest) returns (CreateTodoResponse);
   rpc GetTodo (GetTodoRequest) returns (GetTodoResponse);
+  rpc GetAllTodos (GetAllTodosRequest) returns (GetAllTodosResponse);
+  rpc UpdateTodo (UpdateTodoRequest) returns (UpdateTodoResponse);
 };
 
 message CreateTodoRequest {
@@ -27,4 +29,26 @@ message GetTodoResponse {
   int32 id = 1;
   string content = 2;
   bool isDone = 3;
+};
+
+message GetAllTodosRequest {};
+
+message GetAllTodosResponse {
+  repeated Todo todo = 1;
+};
+
+message Todo {
+  int32 id = 1;
+  string content = 2;
+  bool isDone = 3;
+};
+
+message UpdateTodoRequest {
+  int32 id = 1;
+  string content = 2;
+  bool isDone = 3;
+};
+
+message UpdateTodoResponse {
+  int32 id = 1;
 };

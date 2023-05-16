@@ -8,7 +8,8 @@ services:
     volumes:
       - type: bind
         source: ./
-        target: /src
+        target: /usr/src/app
+    command: "go run ./server/main.go"
     tty: true
     ports:
       - 8000:8000
@@ -19,9 +20,6 @@ services:
       context: ./proxy
       dockerfile: Dockerfile
     container_name: proxy
-    # environment:
-    #   - ENVOY_UID=1000
-    #   - ENVOY_GID=1000
     ports:
       - 9901:9901
       - 9000:9000

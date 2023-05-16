@@ -4,10 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="./dist/main.js"></script>
+  <link rel="stylesheet" href="style.css">
   <title>Document</title>
 </head>
   <body>
-    <input type="text" id="receive-response">
-    <button id="invoke-grpc">button</button>
+    <h1>TOTO APP with gRPC</h1>
+    <hr>
+    <div id="checkbox-list">
+      <div>
+        <input type="checkbox" id="checkbox1" checked>
+        <label for="checkbox1">数理演習の小テスト対策</label>
+        <button id="delete1">削除</button>
+      </div>
+
+      <div>
+        <input type="checkbox" id="checkbox2">
+        <label for="checkbox2">デプロイ先の検討</label>
+        <button id="delete2">削除</button>
+      </div>
+
+      <button id="add-todo">NEW</button>
+    </div>
+
+    <button id="conn"></button>
   </body>
 </html>
