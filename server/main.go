@@ -68,7 +68,7 @@ func (*server) GetTodo(ctx context.Context, req *pb.GetTodoRequest) (*pb.GetTodo
 }
 
 func main() {
-	lis, err := net.Listen("tcp", "localhost:50051")
+	lis, err := net.Listen("tcp", ":8000")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
