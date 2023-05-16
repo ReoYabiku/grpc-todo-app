@@ -1,0 +1,32 @@
+version: '3'
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    volumes:
+      - type: bind
+        source: ./
+        target: /src
+    tty: true
+    ports:
+      - 8000:8000
+    networks:
+      - backend
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    container_name: proxy
+    # environment:
+    #   - ENVOY_UID=1000
+    #   - ENVOY_GID=1000
+    ports:
+      - 9901:9901
+      - 9000:9000
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
