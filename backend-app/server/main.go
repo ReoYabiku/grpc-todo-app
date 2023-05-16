@@ -128,7 +128,25 @@ func (*server) UpdateTodo(ctx context.Context, in *pb.UpdateTodoRequest) (*pb.Up
 		return nil, err
 	}
 
-	return &pb.UpdateTodoResponse{Id: in.Id}, nil
+	return &pb.UpdateTodoResponse{Id: in.GetId()}, nil
+}
+
+func (*server) DeleteTodo(ctx context.Context, in *pb.DeleteTodoRequest) (*pb.DeleteTodoResponse, error) {
+	fmt.Println("DeleteTodo was invoked")
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+	fileName := fmt.Sprintf("%d.gob", in.GetId())
+
+	path := filepath.Join(currentDir, "storage", fileName)
+	err = os.Remove(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.DeleteTodoResponse{Id: in.GetId()}, nil
 }
 
 func main() {
