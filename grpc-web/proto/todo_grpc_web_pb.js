@@ -318,5 +318,66 @@ proto.todo.TodoServicePromiseClient.prototype.updateTodo =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.todo.DeleteTodoRequest,
+ *   !proto.todo.DeleteTodoResponse>}
+ */
+const methodDescriptor_TodoService_DeleteTodo = new grpc.web.MethodDescriptor(
+  '/todo.TodoService/DeleteTodo',
+  grpc.web.MethodType.UNARY,
+  proto.todo.DeleteTodoRequest,
+  proto.todo.DeleteTodoResponse,
+  /**
+   * @param {!proto.todo.DeleteTodoRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.todo.DeleteTodoResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.todo.DeleteTodoRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.todo.DeleteTodoResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.todo.DeleteTodoResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.todo.TodoServiceClient.prototype.deleteTodo =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/todo.TodoService/DeleteTodo',
+      request,
+      metadata || {},
+      methodDescriptor_TodoService_DeleteTodo,
+      callback);
+};
+
+
+/**
+ * @param {!proto.todo.DeleteTodoRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.todo.DeleteTodoResponse>}
+ *     Promise that resolves to the response
+ */
+proto.todo.TodoServicePromiseClient.prototype.deleteTodo =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/todo.TodoService/DeleteTodo',
+      request,
+      metadata || {},
+      methodDescriptor_TodoService_DeleteTodo);
+};
+
+
 module.exports = proto.todo;
 

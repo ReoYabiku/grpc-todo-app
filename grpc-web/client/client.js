@@ -1,4 +1,4 @@
-import {CreateTodoRequest, GetAllTodosRequest, UpdateTodoRequest} from '../proto/todo_pb';
+import {CreateTodoRequest, GetAllTodosRequest, UpdateTodoRequest, DeleteTodoRequest} from '../proto/todo_pb';
 import {TodoServiceClient} from '../proto/todo_grpc_web_pb';
 
 var todoService = new TodoServiceClient('http://localhost:9000');
@@ -11,7 +11,7 @@ while(checkboxList.firstChild){
 var getRequest = new GetAllTodosRequest();
 todoService.getAllTodos(getRequest, {}, function(error, response) {
   if (error) {
-    throw new Error();
+    throw new Error(error);
   }
 
   for(const todo of response.getTodoList()) {
@@ -38,20 +38,50 @@ todoService.getAllTodos(getRequest, {}, function(error, response) {
     label.htmlFor = "checkbox" + todo.getId();
     label.innerText = todo.getContent();
 
-    const button = document.createElement('button');
-    button.id = "delete" + todo.getId();
-    button.innerText = "削除";
+    const deleteBtn = document.createElement('button');
+    deleteBtn.id = "delete" + todo.getId();
+    deleteBtn.innerText = "削除";
+    deleteBtn.addEventListener('click', function(event) {
+      var deleteRequest = new DeleteTodoRequest();
+      deleteRequest.setId(event.target.parentNode.children[0].dataset.id);
+      todoService.deleteTodo(deleteRequest, {}, function(error, response) {
+        if (error) {
+          throw new Error(error);
+        }
+        location.reload();
+      });
+    })
 
     div.appendChild(input);
     div.appendChild(label);
-    div.appendChild(button);
+    div.appendChild(deleteBtn);
     checkboxList.appendChild(div);
   }
 
-  const button = document.createElement('button');
-  button.id = "add-todo";
-  button.innerText = "NEW";
-  checkboxList.appendChild(button);
+  const div = document.createElement('div');
+  const input = document.createElement('input');
+  const addBtn = document.createElement('button');
+  addBtn.id = "add-todo";
+  addBtn.innerText = "追加";
+  addBtn.addEventListener('click', function(event) {
+    var createRequest = new CreateTodoRequest();
+    createRequest.setId(Math.floor( Math.random() * 10000000 ));
+    createRequest.setContent(event.target.parentNode.children[0].value);
+    createRequest.setIsdone(false);
+    if(event.target.parentNode.children[0].value == '') {
+      return;
+    }
+    todoService.createTodo(createRequest, {}, function(error, response) {
+      if (error) {
+        throw new Error(error);
+      }
+      event.target.parentNode.children[0].value = '';
+      location.reload();
+    });
+  })
+  div.appendChild(input);
+  div.appendChild(addBtn);
+  checkboxList.appendChild(div);
 
 })
 
@@ -66,7 +96,7 @@ btn.onclick = function() {
 
   todoService.createTodo(request, {}, function(error, response) {
     if (error) {
-      throw new Error();
+      throw new Error(error);
     }
     console.log('通信が成功しました', response.getId());
   });
