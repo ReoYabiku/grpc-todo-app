@@ -13,8 +13,8 @@ todo app with golang and javascript
 ## 起動方法
 ```
 1. cd backend-app
-1. docker compose up --build
-1. cd ../
+1. docker compose up -d --build
+1. cd ../grpc-web
 1. npx serve ./
 ```
 
