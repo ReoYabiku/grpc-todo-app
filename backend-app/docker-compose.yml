@@ -9,7 +9,6 @@ services:
       - type: bind
         source: ./
         target: /usr/src/app
-    command: "go run ./server/main.go"
     tty: true
     ports:
       - 8000:8000

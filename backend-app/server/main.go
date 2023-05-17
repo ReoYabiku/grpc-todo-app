@@ -82,26 +82,24 @@ func (*server) GetAllTodos(ctx context.Context, in *pb.GetAllTodosRequest) (*pb.
 		return nil, err
 	}
 
-	todos := []*pb.Todo{}
-	
-	for _, fileInfo := range fileInfos {
-		fmt.Println(fileInfo)
+	todos := make([]*pb.Todo, len(fileInfos))
+
+	for i, fileInfo := range fileInfos {
 		path := filepath.Join(storageDir, fileInfo.Name())
 		file, err := os.Open(path)
 		if err != nil {
 			return nil, err
 		}
-		defer file.Close()
 		todo := &pb.Todo{}
 
 		decoder := gob.NewDecoder(file)
 		if err = decoder.Decode(todo); err != nil {
+			file.Close()
 			return nil, err
 		}
+		file.Close()
 
-		fmt.Println(todo)
-
-		todos = append(todos, todo)
+		todos[i] = todo
 	}
 
 	return &pb.GetAllTodosResponse{Todo: todos}, nil
@@ -149,13 +147,28 @@ func (*server) DeleteTodo(ctx context.Context, in *pb.DeleteTodoRequest) (*pb.De
 	return &pb.DeleteTodoResponse{Id: in.GetId()}, nil
 }
 
+func logging() grpc.UnaryServerInterceptor {
+	return func(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+		log.Printf("request data: %+v", req)
+
+		resp, err = handler(ctx, req)
+		if err != nil {
+			return nil, err
+		}
+
+		log.Printf("response data: %+v", resp)
+
+		return resp, nil
+	}
+}
+
 func main() {
 	lis, err := net.Listen("tcp", ":8000")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer()
+	s := grpc.NewServer(grpc.UnaryInterceptor(logging()))
 	pb.RegisterTodoServiceServer(s, &server{})
 
 	fmt.Println("server is running...")

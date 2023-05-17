@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="./dist/main.js"></script>
-    <link rel="stylesheet" href="style.css">
     <title>Document</title>
   </head>
   <body>
     <h1>TODO APP with gRPC</h1>
     <hr>
     <div id="checkbox-list"></div>
-
-    <button id="conn"></button>
   </body>
 </html>
 <style>
@@ -21,7 +18,22 @@
   }
 
   #checkbox-list {
-    width: 500px;
-    padding-left: 35%;
+    width: 40%;
+    padding: 0 30%;
+  }
+
+  #checkbox-list div {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #checkbox-list div:not(:last-child) {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid gray;
+  }
+
+  #checkbox-list div:last-child input {
+    width: 70%;
   }
 </style>

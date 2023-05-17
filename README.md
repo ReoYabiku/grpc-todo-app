@@ -29,5 +29,6 @@ protoc -I. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:grpc-web proto/
 ### バンドルの実行
 ```
 cd grpc-web
-npx webpack ./client/client.js
+npm install
+npx webpack --mode development ./client/client.js
 ```

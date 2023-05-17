@@ -18,39 +18,13 @@ todoService.getAllTodos(getRequest, {}, function(error, response) {
     const div = document.createElement('div');
 
     const input = document.createElement('input');
-    input.type = "checkbox";
-    input.id = "checkbox" + todo.getId();
-    input.dataset.id = todo.getId();
-    input.checked = todo.getIsdone();
-    input.addEventListener('change', function(event) {
-      var updateRequest = new UpdateTodoRequest();
-      updateRequest.setId(event.target.dataset.id);
-      updateRequest.setContent(event.target.parentNode.children[1].innerText);
-      updateRequest.setIsdone(event.target.checked);
-      todoService.updateTodo(updateRequest, {}, function(error, response) {
-        if (response.getId() != event.target.dataset.id || error) {
-          throw new Error();
-        }
-      });
-    })
+    setInputProperty(input, todo);
 
     const label = document.createElement('label');
-    label.htmlFor = "checkbox" + todo.getId();
-    label.innerText = todo.getContent();
+    setLabelProperty(label, todo);
 
     const deleteBtn = document.createElement('button');
-    deleteBtn.id = "delete" + todo.getId();
-    deleteBtn.innerText = "削除";
-    deleteBtn.addEventListener('click', function(event) {
-      var deleteRequest = new DeleteTodoRequest();
-      deleteRequest.setId(event.target.parentNode.children[0].dataset.id);
-      todoService.deleteTodo(deleteRequest, {}, function(error, response) {
-        if (error) {
-          throw new Error(error);
-        }
-        location.reload();
-      });
-    })
+    setDeleteBtnProperty(deleteBtn, todo);
 
     div.appendChild(input);
     div.appendChild(label);
@@ -60,44 +34,85 @@ todoService.getAllTodos(getRequest, {}, function(error, response) {
 
   const div = document.createElement('div');
   const input = document.createElement('input');
+  input.placeholder = "新しいTODO";
   const addBtn = document.createElement('button');
+  setAddBtnProperty(addBtn);
+
+  div.appendChild(input);
+  div.appendChild(addBtn);
+  checkboxList.appendChild(div);
+})
+
+function setInputProperty(input, todo) {
+  input.type = "checkbox";
+  input.id = "checkbox" + todo.getId();
+  input.dataset.id = todo.getId();
+  input.checked = todo.getIsdone();
+
+  input.addEventListener('change', function(event) {
+    var updateRequest = new UpdateTodoRequest();
+    updateRequest.setId(event.target.dataset.id);
+    updateRequest.setContent(event.target.parentNode.children[1].innerText);
+    updateRequest.setIsdone(event.target.checked);
+
+    todoService.updateTodo(updateRequest, {}, function(error, response) {
+      if (error) {
+        throw new Error(error);
+      } else if (response.getId() != event.target.dataset.id) {
+        throw new Error("unexpected response")
+      }
+    });
+  })
+}
+
+function setLabelProperty(label, todo) {
+  label.htmlFor = "checkbox" + todo.getId();
+  label.innerText = todo.getContent();
+}
+
+function setDeleteBtnProperty(deleteBtn, todo) {
+  deleteBtn.id = "delete" + todo.getId();
+  deleteBtn.innerText = "削除";
+
+  deleteBtn.addEventListener('click', function(event) {
+    var deleteRequest = new DeleteTodoRequest();
+    const deleteElementId = event.target.parentNode.children[0].dataset.id;
+    deleteRequest.setId(deleteElementId);
+
+    todoService.deleteTodo(deleteRequest, {}, function(error, response) {
+      if (error) {
+        throw new Error(error);
+      } else if (response.getId() != deleteElementId) {
+        throw new Error("unexpected response")
+      }
+      location.reload();
+    });
+  })
+}
+
+function setAddBtnProperty(addBtn) {
   addBtn.id = "add-todo";
   addBtn.innerText = "追加";
+
   addBtn.addEventListener('click', function(event) {
     var createRequest = new CreateTodoRequest();
-    createRequest.setId(Math.floor( Math.random() * 10000000 ));
+    const new_id = Math.floor( Math.random() * 10000000);
+    createRequest.setId(new_id);
     createRequest.setContent(event.target.parentNode.children[0].value);
     createRequest.setIsdone(false);
+
     if(event.target.parentNode.children[0].value == '') {
       return;
     }
+
     todoService.createTodo(createRequest, {}, function(error, response) {
       if (error) {
         throw new Error(error);
+      } else if (response.getId() != new_id) {
+        throw new Error("unexpected response")
       }
       event.target.parentNode.children[0].value = '';
       location.reload();
     });
   })
-  div.appendChild(input);
-  div.appendChild(addBtn);
-  checkboxList.appendChild(div);
-
-})
-
-const btn = document.querySelector('#conn');
-btn.onclick = function() {
-  console.log('pushed!');
-  var request = new CreateTodoRequest();
-
-  request.setId(2);
-  request.setContent('try to conntct to backend server');
-  request.setIsdone(false);
-
-  todoService.createTodo(request, {}, function(error, response) {
-    if (error) {
-      throw new Error(error);
-    }
-    console.log('通信が成功しました', response.getId());
-  });
 }
